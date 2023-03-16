@@ -1,35 +1,42 @@
 library(readxl)
 library(dplyr)
+library(tidyr)
+library(rpart)
+library(rpart.plot)
+rm(list=ls())
 
 #Leandra's working directory
 setwd("~/git_data/marchMadness23")
 #Hildana's directory
 setwd("~/Desktop/DATA-332/Project2")
+#Mansi's directory
+setwd("~/Desktop/DATA-331/Project2")
 
-
-tournGameData <- read.csv('Tournament Game Data.csv')
-
-gonzagaData <- tournGameData %>%
-  dplyr::filter(TEAM == "Gonzaga")
 
 #Mar 15
-library(readxl)
-library(rpart)
-library(rpart.plot)
-rm(list=ls())
 
-setwd("~/Desktop/DATA-332/Project2")
-
-
-gameEssentials <- read.csv('Tournament Game Data.csv')
+tournGameData <- read.csv('Tournament Game Data.csv')
+tournGameDataClean <- tournGameData[!duplicated(tournGameData), ]
+trendData <- read.csv('Tournament Trends.csv')
 saveRDS(game,'Tournament Game Data.rds')
 #clean data
-table1 <- gameEssentials %>%
+table1 <- tournGameDataClean %>%
   select(YEAR,TEAM,SEED,TEAM.ROUND,FREE.THROW..,)
 table2 <- table1%>%
   filter(SEED>7, TEAM.ROUND>10)
+table3 <- trendData%>%
+  select(TEAM,YEAR, NEUTRAL.WIN..)
+table4 <- merge(x=table2, y=table3,
+                  by= "TEAM", all.x = TRUE)
+table4<-table4[complete.cases(table4), ]
 
-#Decision tree
+freeThrowReasoning <- tournGameDataClean%>%
+  dplyr::filter(TEAM == "Furman" | TEAM == "Virginia", YEAR == "2023")%>%
+  select(YEAR, TEAM, FREE.THROW..)
+
+  
+  
+  #Decision tree
 Results <- rpart()
 rpart.plot(Results, type=3, fallen.leaves=F, cex=.5 )
 
