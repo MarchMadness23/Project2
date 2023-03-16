@@ -3,7 +3,9 @@ library(dplyr)
 library(tidyr)
 library(rpart)
 library(rpart.plot)
+
 rm(list=ls())
+
 
 #Leandra's working directory
 setwd("~/git_data/marchMadness23")
@@ -34,8 +36,18 @@ freeThrowReasoning <- tournGameDataClean%>%
   dplyr::filter(TEAM == "Furman" | TEAM == "Virginia", YEAR == "2023")%>%
   select(YEAR, TEAM, FREE.THROW..)
 
+
+
+#make this example reproducible
+set.seed(1)
+
+#create ID column
+df$id <- 1:nrow(table4)
+
+#use 70% of dataset as training set and 30% as test set 
+train <- table4 %>% dplyr::sample_frac(0.70)
   
-  
+test <- table4 %>% dplyr::sample_frac(0.30)  
   #Decision tree
 Results <- rpart()
 rpart.plot(Results, type=3, fallen.leaves=F, cex=.5 )
