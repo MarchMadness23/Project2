@@ -28,6 +28,7 @@ table2 <- table1%>%
   filter(SEED>7, TEAM.ROUND>10)
 table3 <- trendData%>%
   select(TEAM,YEAR, NEUTRAL.WIN..)
+  group_by(YEAR)
 table4 <- merge(x=table2, y=table3,
                   by= "TEAM", all.x = TRUE)
 table4<-table4[complete.cases(table4), ]
@@ -41,14 +42,22 @@ freeThrowReasoning <- tournGameDataClean%>%
 #make this example reproducible
 set.seed(1)
 
-#create ID column
-df$id <- 1:nrow(table4)
 
 #use 70% of dataset as training set and 30% as test set 
-train <- table4 %>% dplyr::sample_frac(0.70)
-  
-test <- table4 %>% dplyr::sample_frac(0.30)  
-  #Decision tree
+samp= sample(1:nrow(iris), size = round(0.7*nrow(iris)),replace=FALSE)
+train<-iris[samp,]
+test<-iris[-samp,]
+
+
+
+
+
+
+
+
+
+
+#Decision tree
 Results <- rpart()
 rpart.plot(Results, type=3, fallen.leaves=F, cex=.5 )
 
