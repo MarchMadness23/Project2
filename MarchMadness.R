@@ -19,6 +19,7 @@ setwd("~/Desktop/DATA-331/Project2")
 
 tournGameData <- read.csv('Tournament Game Data.csv')
 tournGameDataClean <- tournGameData[!duplicated(tournGameData), ]
+tournData23 <- read.csv('2023 Tournament Data.csv')
 trendData <- read.csv('Tournament Trends.csv')
 saveRDS(game,'Tournament Game Data.rds')
 #clean data
@@ -28,9 +29,13 @@ table2 <- table1%>%
   filter(SEED>7, TEAM.ROUND>10)
 table3 <- trendData%>%
   select(TEAM,YEAR, NEUTRAL.WIN..)
-table4 <- merge(x=table2, y=table3,
-                  by= "TEAM", all.x = TRUE)
-table4<-table4[complete.cases(table4), ]
+table3<-table3[complete.cases(table3), ]
+table4 <- tournData23%>%
+  select(YEAR, TEAM, SEED, OFFENSIVE.REBOUND.., DEFENSIVE.REBOUND..)
+
+freeThrowReasoning2 <- tournGameData%>%
+  dplyr::filter(TEAM == "Princeton")%>%
+  select(YEAR, TEAM, FREE.THROW..)
 
 freeThrowReasoning <- tournGameDataClean%>%
   dplyr::filter(TEAM == "Furman" | TEAM == "Virginia", YEAR == "2023")%>%
