@@ -3,6 +3,10 @@ library(dplyr)
 library(tidyr)
 library(rpart)
 library(rpart.plot)
+library(modelr)
+library(tidyverse)
+library(na.action =na.warn)
+library(ggplot2)
 
 rm(list=ls())
 
@@ -44,16 +48,44 @@ set.seed(1)
 
 
 #use 70% of dataset as training set and 30% as test set 
-samp= sample(1:nrow(iris), size = round(0.7*nrow(iris)),replace=FALSE)
-train<-iris[samp,]
-test<-iris[-samp,]
+samp= sample(1:nrow(table4), size = round(0.7*nrow(table4)),replace=FALSE)
+train<-table4[samp,]
+test<-table4[-samp,]
 
 
+#Building a model
 
+ggplot(table4,aes(NEUTRAL.WIN..,FREE.THROW..))+
+  geom_point()
 
+models<-tibble(a1 = runif(250,-20,40),
+               a2=runif(250,-5,5)
+               )
 
+ggplot(table4,mapping=aes(x=NEUTRAL.WIN..,y=FREE.THROW..))+
+         geom_abline(
+           aes(intercept=a1, slope = a2),
+           data= models, alpha = 1/4
+         )+
+         geom_point()
+       
+model1 <-function(a,data){
+  a[1]+data$x*a[2]
+}
+model1(c(7,1.5),table4)
 
+measure_distance<-function(mod,data){
+  diff<-data$y- model1(mod,data)
+  sqrt(mean(diff^2))
+}
+measure_distance(c(7,1.5),table4)
 
+table4_dist<-function(a1,a2){
+  measure_distance(c(a1,a2),table4)
+}
+models<-models%>%
+  mutate(dist = purr::map2_dbl(a1, a2,table4_dist ))
+       
 
 
 
