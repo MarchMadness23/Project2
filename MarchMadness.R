@@ -91,7 +91,13 @@ table4_dist<-function(a1,a2){
 models<-models%>%
   mutate(dist = purr::map2_dbl(a1, a2,table4_dist ))
        
+# Train the model
+model <- lm(SEED ~ DEFENSIVE.REBOUND.. + OFFENSIVE.REBOUND.., data = train)
 
+# Evaluate the model # linear regression 
+predictions <- predict(model, newdata = test)
+rmse <- RMSE(predictions, test$DEFENSIVE.REBOUND..)
+rsquared <- R2(predictions,test$DEFENSIVE.REBOUND.. )
 
 
 #Decision tree
