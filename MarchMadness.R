@@ -50,7 +50,8 @@ testing <-tournGameDataClean%>%
   dplyr::filter(YEAR == "2021" | YEAR == "2022", CURRENT.ROUND == "8")%>%
   select(YEAR, TEAM, SEED, CURRENT.ROUND)
 
-
+#teams missing data on
+#penn state, utah st, drake, kent state, louisiana, kennesaw st, uc santa barbara, gcu, montana state, princeton, northern kentucky, texas southern, se mo st, fdu
 
 #make this example reproducible
 set.seed(1)
