@@ -25,18 +25,45 @@ tournGameData <- read.csv('Tournament Game Data.csv')
 tournGameDataClean <- tournGameData[!duplicated(tournGameData), ]
 tournData23 <- read.csv('2023 Tournament Data.csv')
 trendData <- read.csv('Tournament Trends.csv')
-saveRDS(game,'Tournament Game Data.rds')
+saveRDS(trendData,'Tournament Game Data.rds')
 #clean data
 table1 <- tournGameDataClean %>%
   select(YEAR,TEAM,SEED,TEAM.ROUND,FREE.THROW..,)
 table2 <- table1%>%
   filter(SEED<7, TEAM.ROUND>10)
 table3 <- trendData%>%
-  select(TEAM,YEAR, NEUTRAL.WIN..)
+  select(TEAM,YEAR, NEUTRAL.WIN..)%>%
   group_by(YEAR)
 table3<-table3[complete.cases(table3), ]
 table4 <- tournData23%>%
   select(YEAR, TEAM, SEED, OFFENSIVE.REBOUND.., DEFENSIVE.REBOUND..)
+
+#Correcting the data to match the tournament accurately
+table4 <- table4 %>%
+  add_row(YEAR = 2023, TEAM = 'Princeton', SEED = 15, OFFENSIVE.REBOUND.. = 28.7, DEFENSIVE.REBOUND.. = 77.3)%>%
+  add_row(YEAR = 2023, TEAM = 'FDU', SEED = 16, OFFENSIVE.REBOUND.. = 30.7, DEFENSIVE.REBOUND.. = 70.6)%>%
+  add_row(YEAR = 2023, TEAM = 'Penn State', SEED = 10, OFFENSIVE.REBOUND.. = 19.2, DEFENSIVE.REBOUND.. = 74.4)
+
+table4$SEED[table4$TEAM == "Maryland"] <- 8
+table4$SEED[table4$TEAM == "Furman"] <- 13
+table4$SEED[table4$TEAM == "Baylor"] <- 3
+table4$SEED[table4$TEAM == "Missouri"] <- 7
+table4$SEED[table4$TEAM == "Duke"] <- 5
+table4$SEED[table4$TEAM == "Tennessee"] <- 4
+table4$SEED[table4$TEAM == "Marquette"] <- 2
+table4$SEED[table4$TEAM == "Auburn"] <- 9
+table4$SEED[table4$TEAM == "Pittsburgh"] <- 11
+table4$SEED[table4$TEAM == "Xavier"] <- 3
+table4$SEED[table4$TEAM == "TCU"] <- 6
+table4$SEED[table4$TEAM == "Northwestern"] <- 7
+table4$SEED[table4$TEAM == "West Virginia"] <- 9
+table4$SEED[table4$TEAM == "North Carolina State"] <- 11
+table4$SEED[table4$TEAM == "Memphis"] <- 8
+table4$SEED[table4$TEAM == "Providence"] <- 11
+table4$SEED[table4$TEAM == "USC"] <- 10
+table4$SEED[table4$TEAM == "Illinois"] <- 9
+table4$SEED[table4$TEAM == "Iona"] <- 13
+
 
 freeThrowReasoning2 <- tournGameData%>%
   dplyr::filter(TEAM == "Princeton")%>%
@@ -51,7 +78,7 @@ testing <-tournGameDataClean%>%
   select(YEAR, TEAM, SEED, CURRENT.ROUND)
 
 #teams missing data on
-#penn state, utah st, drake, kent state, louisiana, kennesaw st, uc santa barbara, gcu, montana state, princeton, northern kentucky, texas southern, se mo st, fdu
+#penn state, utah st, drake, kent state, louisiana, kennesaw st, uc santa barbara, gcu, montana state, , northern kentucky, texas southern, se mo st, 
 
 #make this example reproducible
 set.seed(1)
