@@ -30,7 +30,7 @@ saveRDS(game,'Tournament Game Data.rds')
 table1 <- tournGameDataClean %>%
   select(YEAR,TEAM,SEED,TEAM.ROUND,FREE.THROW..,)
 table2 <- table1%>%
-  filter(SEED>7, TEAM.ROUND>10)
+  filter(SEED<7, TEAM.ROUND>10)
 table3 <- trendData%>%
   select(TEAM,YEAR, NEUTRAL.WIN..)
   group_by(YEAR)
@@ -45,6 +45,10 @@ freeThrowReasoning2 <- tournGameData%>%
 freeThrowReasoning <- tournGameDataClean%>%
   dplyr::filter(TEAM == "Furman" | TEAM == "Virginia", YEAR == "2023")%>%
   select(YEAR, TEAM, FREE.THROW..)
+
+testing <-tournGameDataClean%>%
+  dplyr::filter(YEAR == "2021" | YEAR == "2022", CURRENT.ROUND == "8")%>%
+  select(YEAR, TEAM, SEED, CURRENT.ROUND)
 
 
 
