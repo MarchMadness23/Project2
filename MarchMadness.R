@@ -28,13 +28,11 @@ trendData <- read.csv('Tournament Trends.csv')
 saveRDS(trendData,'Tournament Game Data.rds')
 #clean data
 table1 <- tournGameDataClean %>%
-  select(YEAR,TEAM,SEED,TEAM.ROUND,FREE.THROW..,)
+  select(YEAR,TEAM,SEED,TEAM.ROUND, FREE.THROW..,)
 tournGameData23 <- table1%>%
-  filter(YEAR == 2023)
+  filter(YEAR == 2023)%>%
+  select(TEAM,SEED,FREE.THROW..,)
 tournGameData23 <- tournGameData23[!duplicated(tournGameData23), ]
-tournGameData23 <- tournGameData23%>%
-  add_row(YEAR = 2023, TEAM = 'Princeton', SEED = 15, TEAM.ROUND = 0, FREE.THROW.. = 71.5)%>%
-  add_row(YEAR = 2023, TEAM = 'Penn State', SEED = 10, TEAM.ROUND = 0, FREE.THROW.. = 73.9)
 tournGameData23$SEED[tournGameData23$TEAM == "Maryland"] <- 8
 tournGameData23$SEED[tournGameData23$TEAM == "Furman"] <- 13
 tournGameData23$SEED[tournGameData23$TEAM == "Baylor"] <- 3
@@ -63,43 +61,19 @@ table3 <- trendData%>%
   group_by(YEAR)
 table3<-table3[complete.cases(table3), ]
 table4 <- tournData23%>%
-  select(YEAR, TEAM, SEED, OFFENSIVE.REBOUND.., DEFENSIVE.REBOUND..)
+  select(TEAM, OFFENSIVE.REBOUND.., DEFENSIVE.REBOUND..)
 
+mergedData <- merge(tournGameData23, table4, by = "TEAM", all.x = TRUE)
 #Correcting the data to match the tournament accurately
-table4 <- table4 %>%
-  add_row(YEAR = 2023, TEAM = 'Princeton', SEED = 15, OFFENSIVE.REBOUND.. = 28.7, DEFENSIVE.REBOUND.. = 77.3)%>%
-  add_row(YEAR = 2023, TEAM = 'FDU', SEED = 16, OFFENSIVE.REBOUND.. = 30.7, DEFENSIVE.REBOUND.. = 70.6)%>%
-  add_row(YEAR = 2023, TEAM = 'Penn State', SEED = 10, OFFENSIVE.REBOUND.. = 19.2, DEFENSIVE.REBOUND.. = 74.4)
+mergedData <- mergedData %>%
+  add_row(TEAM = 'Princeton', OFFENSIVE.REBOUND.. = 28.7, DEFENSIVE.REBOUND.. = 77.3, SEED = 15, FREE.THROW.. = 71.5)%>%
+  add_row(TEAM = 'Penn State', OFFENSIVE.REBOUND.. = 19.2, DEFENSIVE.REBOUND.. = 74.4, SEED = 10, FREE.THROW.. = 73.9)
 
-table4$SEED[table4$TEAM == "Maryland"] <- 8
-table4$SEED[table4$TEAM == "Furman"] <- 13
-table4$SEED[table4$TEAM == "Baylor"] <- 3
-table4$SEED[table4$TEAM == "Missouri"] <- 7
-table4$SEED[table4$TEAM == "Duke"] <- 5
-table4$SEED[table4$TEAM == "Tennessee"] <- 4
-table4$SEED[table4$TEAM == "Marquette"] <- 2
-table4$SEED[table4$TEAM == "Auburn"] <- 9
-table4$SEED[table4$TEAM == "Pittsburgh"] <- 11
-table4$SEED[table4$TEAM == "Xavier"] <- 3
-table4$SEED[table4$TEAM == "TCU"] <- 6
-table4$SEED[table4$TEAM == "Northwestern"] <- 7
-table4$SEED[table4$TEAM == "West Virginia"] <- 9
-table4$SEED[table4$TEAM == "North Carolina State"] <- 11
-table4$SEED[table4$TEAM == "Memphis"] <- 8
-table4$SEED[table4$TEAM == "Providence"] <- 11
-table4$SEED[table4$TEAM == "USC"] <- 10
-table4$SEED[table4$TEAM == "Illinois"] <- 9
-table4$SEED[table4$TEAM == "Iona"] <- 13
-table4$SEED[table4$TEAM == "Nevada"] <- 11
-table4$SEED[table4$TEAM == "NC-Asheville"] <- 15
+upsetReasoning1 <- mergedData%>%
+  dplyr::filter(TEAM == "Furman" | TEAM == "Virginia")
 
-freeThrowReasoning <- tournGameData23%>%
-  dplyr::filter(TEAM == "Furman" | TEAM == "Virginia", YEAR == "2023")%>%
-  select(YEAR, TEAM, FREE.THROW..)
-
-reboundReasoning <- table4%>%
-  dplyr::filter(TEAM == "Michigan State" | TEAM == "Marquette", YEAR == "2023")%>%
-  select(YEAR, TEAM, OFFENSIVE.REBOUND.., DEFENSIVE.REBOUND..)
+upsetReasoning2 <- mergedData%>%
+  dplyr::filter(TEAM == "Michigan State" | TEAM == "Marquette")
 
 #make this example reproducible
 set.seed(1)
