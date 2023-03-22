@@ -61,13 +61,13 @@ table3 <- trendData%>%
   group_by(YEAR)
 table3<-table3[complete.cases(table3), ]
 table4 <- tournData23%>%
-  select(TEAM, OFFENSIVE.REBOUND.., DEFENSIVE.REBOUND..)
+  select(TEAM, OFFENSIVE.REBOUND.., DEFENSIVE.REBOUND.., X2PT.., X3PT..)
 
 mergedData <- merge(tournGameData23, table4, by = "TEAM", all.x = TRUE)
 #Correcting the data to match the tournament accurately
 mergedData <- mergedData %>%
-  add_row(TEAM = 'Princeton', OFFENSIVE.REBOUND.. = 28.7, DEFENSIVE.REBOUND.. = 77.3, SEED = 15, FREE.THROW.. = 71.5)%>%
-  add_row(TEAM = 'Penn State', OFFENSIVE.REBOUND.. = 19.2, DEFENSIVE.REBOUND.. = 74.4, SEED = 10, FREE.THROW.. = 73.9)
+  add_row(TEAM = 'Princeton', OFFENSIVE.REBOUND.. = 28.7, DEFENSIVE.REBOUND.. = 77.3, SEED = 15, FREE.THROW.. = 71.5, X2PT.. = 53.6, X3PT.. = 33.4)%>%
+  add_row(TEAM = 'Penn State', OFFENSIVE.REBOUND.. = 19.2, DEFENSIVE.REBOUND.. = 74.4, SEED = 10, FREE.THROW.. = 73.9, X2PT.. = 53.1, X3PT.. = 38.7)
 
 upsetReasoning1 <- mergedData%>%
   dplyr::filter(TEAM == "Furman" | TEAM == "Virginia")
