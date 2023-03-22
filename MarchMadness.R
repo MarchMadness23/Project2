@@ -93,21 +93,13 @@ table4$SEED[table4$TEAM == "Iona"] <- 13
 table4$SEED[table4$TEAM == "Nevada"] <- 11
 table4$SEED[table4$TEAM == "NC-Asheville"] <- 15
 
-
-freeThrowReasoning2 <- tournGameData%>%
-  dplyr::filter(TEAM == "Princeton")%>%
-  select(YEAR, TEAM, FREE.THROW..)
-
-freeThrowReasoning <- tournGameDataClean%>%
+freeThrowReasoning <- tournGameData23%>%
   dplyr::filter(TEAM == "Furman" | TEAM == "Virginia", YEAR == "2023")%>%
   select(YEAR, TEAM, FREE.THROW..)
 
-testing <-tournGameDataClean%>%
-  dplyr::filter(YEAR == "2021" | YEAR == "2022", CURRENT.ROUND == "8")%>%
-  select(YEAR, TEAM, SEED, CURRENT.ROUND)
-
-#teams missing data on
-#penn state, utah st, drake, kent state, louisiana, kennesaw st, uc santa barbara, gcu, montana state, , northern kentucky, texas southern, se mo st, 
+reboundReasoning <- table4%>%
+  dplyr::filter(TEAM == "Michigan State" | TEAM == "Marquette", YEAR == "2023")%>%
+  select(YEAR, TEAM, OFFENSIVE.REBOUND.., DEFENSIVE.REBOUND..)
 
 #make this example reproducible
 set.seed(1)
