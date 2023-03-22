@@ -29,6 +29,33 @@ saveRDS(trendData,'Tournament Game Data.rds')
 #clean data
 table1 <- tournGameDataClean %>%
   select(YEAR,TEAM,SEED,TEAM.ROUND,FREE.THROW..,)
+tournGameData23 <- table1%>%
+  filter(YEAR == 2023)
+tournGameData23 <- tournGameData23[!duplicated(tournGameData23), ]
+tournGameData23 <- tournGameData23%>%
+  add_row(YEAR = 2023, TEAM = 'Princeton', SEED = 15, TEAM.ROUND = 0, FREE.THROW.. = 71.5)%>%
+  add_row(YEAR = 2023, TEAM = 'Penn State', SEED = 10, TEAM.ROUND = 0, FREE.THROW.. = 73.9)
+tournGameData23$SEED[tournGameData23$TEAM == "Maryland"] <- 8
+tournGameData23$SEED[tournGameData23$TEAM == "Furman"] <- 13
+tournGameData23$SEED[tournGameData23$TEAM == "Baylor"] <- 3
+tournGameData23$SEED[tournGameData23$TEAM == "Missouri"] <- 7
+tournGameData23$SEED[tournGameData23$TEAM == "Duke"] <- 5
+tournGameData23$SEED[tournGameData23$TEAM == "Tennessee"] <- 4
+tournGameData23$SEED[tournGameData23$TEAM == "Marquette"] <- 2
+tournGameData23$SEED[tournGameData23$TEAM == "Auburn"] <- 9
+tournGameData23$SEED[tournGameData23$TEAM == "Pittsburgh"] <- 11
+tournGameData23$SEED[tournGameData23$TEAM == "Xavier"] <- 3
+tournGameData23$SEED[tournGameData23$TEAM == "TCU"] <- 6
+tournGameData23$SEED[tournGameData23$TEAM == "Northwestern"] <- 7
+tournGameData23$SEED[tournGameData23$TEAM == "West Virginia"] <- 9
+tournGameData23$SEED[tournGameData23$TEAM == "North Carolina State"] <- 11
+tournGameData23$SEED[tournGameData23$TEAM == "Memphis"] <- 8
+tournGameData23$SEED[tournGameData23$TEAM == "Providence"] <- 11
+tournGameData23$SEED[tournGameData23$TEAM == "USC"] <- 10
+tournGameData23$SEED[tournGameData23$TEAM == "Illinois"] <- 9
+tournGameData23$SEED[tournGameData23$TEAM == "Iona"] <- 13
+tournGameData23$SEED[tournGameData23$TEAM == "Nevada"] <- 11
+tournGameData23$SEED[tournGameData23$TEAM == "NC-Asheville"] <- 15
 table2 <- table1%>%
   filter(SEED<7, TEAM.ROUND>10)
 table3 <- trendData%>%
@@ -63,6 +90,8 @@ table4$SEED[table4$TEAM == "Providence"] <- 11
 table4$SEED[table4$TEAM == "USC"] <- 10
 table4$SEED[table4$TEAM == "Illinois"] <- 9
 table4$SEED[table4$TEAM == "Iona"] <- 13
+table4$SEED[table4$TEAM == "Nevada"] <- 11
+table4$SEED[table4$TEAM == "NC-Asheville"] <- 15
 
 
 freeThrowReasoning2 <- tournGameData%>%
