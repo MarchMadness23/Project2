@@ -7,6 +7,7 @@ library(modelr)
 library(tidyverse)
 library(na.action =na.warn)
 library(ggplot2)
+library(corrplot)
 
 rm(list=ls())
 
@@ -61,13 +62,42 @@ table3 <- trendData%>%
   group_by(YEAR)
 table3<-table3[complete.cases(table3), ]
 table4 <- tournData23%>%
-  select(TEAM, OFFENSIVE.REBOUND.., DEFENSIVE.REBOUND.., X2PT.., X3PT..)
+  select(TEAM, OFFENSIVE.REBOUND.., DEFENSIVE.REBOUND.., X2PT.., X3PT.., WIN..)
 
 mergedData <- merge(tournGameData23, table4, by = "TEAM", all.x = TRUE)
 #Correcting the data to match the tournament accurately
 mergedData <- mergedData %>%
-  add_row(TEAM = 'Princeton', OFFENSIVE.REBOUND.. = 28.7, DEFENSIVE.REBOUND.. = 77.3, SEED = 15, FREE.THROW.. = 71.5, X2PT.. = 53.6, X3PT.. = 33.4)%>%
-  add_row(TEAM = 'Penn State', OFFENSIVE.REBOUND.. = 19.2, DEFENSIVE.REBOUND.. = 74.4, SEED = 10, FREE.THROW.. = 73.9, X2PT.. = 53.1, X3PT.. = 38.7)
+  add_row(TEAM = 'Princeton', OFFENSIVE.REBOUND.. = 28.7, DEFENSIVE.REBOUND.. = 77.3, SEED = 15, FREE.THROW.. = 71.5, X2PT.. = 53.6, X3PT.. = 33.4, WIN.. = 72.4)%>%
+  add_row(TEAM = 'Penn State', OFFENSIVE.REBOUND.. = 19.2, DEFENSIVE.REBOUND.. = 74.4, SEED = 10, FREE.THROW.. = 73.9, X2PT.. = 53.1, X3PT.. = 38.7, WIN.. = 62.2)
+
+#mergedData <- cbind(mergedData, "AVERAGE")
+#mergedData$`"AVERAGE"` <- rowMeans(mergedData$FREE.THROW.., mergedData$OFFENSIVE.REBOUND.., mergedData$DEFENSIVE.REBOUND.., mergedData$X2PT.., mergedData$X3PT..)
+mergedData$Average <- rowSums(mergedData[,3:8])
+mergedData$Average <- mergedData$Average / 5
+
+df_cortable<-mergedData%>%
+  select(SEED, FREE.THROW.., OFFENSIVE.REBOUND.., DEFENSIVE.REBOUND.., X2PT.., X3PT.., WIN..)
+head(df_cortable)
+B<-cor(df_cortable)
+head(round(B,2))
+corrplot(B, method="color")
+
+table5 <- tournData23%>%
+  select(TEAM, SEED, OFFENSIVE.REBOUND.., DEFENSIVE.REBOUND.., X3PT.., WIN..)
+table5 <- table5 %>%
+  add_row(TEAM = 'Princeton', OFFENSIVE.REBOUND.. = 28.7, DEFENSIVE.REBOUND.. = 77.3, SEED = 15, X3PT.. = 33.4, WIN.. = 72.4)%>%
+  add_row(TEAM = 'Penn State', OFFENSIVE.REBOUND.. = 19.2, DEFENSIVE.REBOUND.. = 74.4, SEED = 10, X3PT.. = 38.7, WIN.. = 62.2)
+table5$Average <- rowSums(table5[,3:6])
+table5$Average <- table5$Average / 5
+
+table6 <- tournData23%>%
+  select(TEAM, SEED, OFFENSIVE.REBOUND..,, X3PT..)
+table6 <- table6 %>%
+  add_row(TEAM = 'Princeton', OFFENSIVE.REBOUND.. = 28.7, SEED = 15, X3PT.. = 33.4)%>%
+  add_row(TEAM = 'Penn State', OFFENSIVE.REBOUND.. = 19.2, SEED = 10, X3PT.. = 38.7)
+table6$Average <- rowSums(table6[,3:4])
+table6$Average <- table6$Average / 5
+
 
 upsetReasoning1 <- mergedData%>%
   dplyr::filter(TEAM == "Furman" | TEAM == "Virginia")
