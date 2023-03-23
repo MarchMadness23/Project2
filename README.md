@@ -4,3 +4,27 @@ For this project we analysed data on the performance of teams on March madness s
 
 
 ![19a42410dda651c98b107d53ef654d0d](https://user-images.githubusercontent.com/108307724/224206117-8971413f-8999-4c35-a383-d61730d24871.jpeg)
+
+# Cleaning the Data-Mansi 
+
+
+
+# Looking at the winners- Leandra
+
+# Correlation-Hildana
+
+# Creating a new meteric- Leandra
+
+# Conclusion-
+Winner for each bracket
+Overall winner
+
+# Contributors
+Hildana Teklegiorgis</br>
+Leandra Gottschalk</br>
+Mansi Gujadhur</br>
+
+
+
+
+
