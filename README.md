@@ -17,6 +17,7 @@ variables <- df%>%
   select(Company, Product,Issue,State)
 
 ```
+
 # Creating a new meteric- Leandra
 
 # Conclusion-
