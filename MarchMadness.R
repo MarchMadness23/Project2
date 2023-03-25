@@ -8,6 +8,10 @@ library(tidyverse)
 library(na.action =na.warn)
 library(ggplot2)
 library(corrplot)
+library(purrr)
+library(shiny)
+library(DT)
+library(rsconnect)
 
 rm(list=ls())
 
@@ -32,7 +36,7 @@ table1 <- tournGameDataClean %>%
   select(YEAR,TEAM,SEED,TEAM.ROUND, FREE.THROW..,)
 tournGameData23 <- table1%>%
   filter(YEAR == 2023)%>%
-  select(TEAM,SEED,FREE.THROW..,)
+  select(TEAM,SEED)
 tournGameData23 <- tournGameData23[!duplicated(tournGameData23), ]
 tournGameData23$SEED[tournGameData23$TEAM == "Maryland"] <- 8
 tournGameData23$SEED[tournGameData23$TEAM == "Furman"] <- 13
@@ -62,18 +66,35 @@ table3 <- trendData%>%
   group_by(YEAR)
 table3<-table3[complete.cases(table3), ]
 table4 <- tournData23%>%
-  select(TEAM, OFFENSIVE.REBOUND.., DEFENSIVE.REBOUND.., X2PT.., X3PT.., WIN..)
+  select(TEAM, OFFENSIVE.REBOUND.., DEFENSIVE.REBOUND.., X2PT.., X3PT.., WIN.., FREE.THROW..)
 
 mergedData <- merge(tournGameData23, table4, by = "TEAM", all.x = TRUE)
 #Correcting the data to match the tournament accurately
 mergedData <- mergedData %>%
-  add_row(TEAM = 'Princeton', OFFENSIVE.REBOUND.. = 28.7, DEFENSIVE.REBOUND.. = 77.3, SEED = 15, FREE.THROW.. = 71.5, X2PT.. = 53.6, X3PT.. = 33.4, WIN.. = 72.4)%>%
-  add_row(TEAM = 'Penn State', OFFENSIVE.REBOUND.. = 19.2, DEFENSIVE.REBOUND.. = 74.4, SEED = 10, FREE.THROW.. = 73.9, X2PT.. = 53.1, X3PT.. = 38.7, WIN.. = 62.2)
+  add_row(TEAM = 'Princeton', OFFENSIVE.REBOUND.. = 28.7, DEFENSIVE.REBOUND.. = 77.3, SEED = 15, X2PT.. = 53.6, X3PT.. = 33.4, WIN.. = 72.4, FREE.THROW.. = 71.5)%>%
+  add_row(TEAM = 'Penn State', OFFENSIVE.REBOUND.. = 19.2, DEFENSIVE.REBOUND.. = 74.4, SEED = 10, X2PT.. = 53.1, X3PT.. = 38.7, WIN.. = 62.2, FREE.THROW.. = 73.9)
 
 #mergedData <- cbind(mergedData, "AVERAGE")
 #mergedData$`"AVERAGE"` <- rowMeans(mergedData$FREE.THROW.., mergedData$OFFENSIVE.REBOUND.., mergedData$DEFENSIVE.REBOUND.., mergedData$X2PT.., mergedData$X3PT..)
 mergedData$Average <- rowSums(mergedData[,3:8])
-mergedData$Average <- mergedData$Average / 5
+#mergedData$Average <- mergedData$Average / 5
+mergedData$REGION[mergedData$TEAM == "Alabama" | mergedData$TEAM == "Texas A&M-Corpus Christi" | mergedData$TEAM == "Maryland" | mergedData$TEAM == "West Virginia" |
+                    mergedData$TEAM == "San Diego State" | mergedData$TEAM == "College of Charleston" | mergedData$TEAM == "Virginia" |
+                    mergedData$TEAM == "Furman" | mergedData$TEAM == "Creighton" | mergedData$TEAM == "North Carolina State" | mergedData$TEAM == "Baylor" |
+                    mergedData$TEAM == "Missouri" | mergedData$TEAM == "Utah State" | mergedData$TEAM == "Arizona" | mergedData$TEAM == "Princeton"] <- "South"
+mergedData$REGION[mergedData$TEAM == "Purdue" | mergedData$TEAM == "Fairleigh Dickinson" | mergedData$TEAM == "Memphis" | mergedData$TEAM == "Florida Atlantic" |
+                    mergedData$TEAM == "Duke" | mergedData$TEAM == "Oral Roberts" | mergedData$TEAM == "Tennessee" |
+                    mergedData$TEAM == "Louisiana" | mergedData$TEAM == "Kentucky" | mergedData$TEAM == "Providence" | mergedData$TEAM == "Kansas State" |
+                    mergedData$TEAM == "Montana State" | mergedData$TEAM == "Michigan State" | mergedData$TEAM == "USC" | mergedData$TEAM == "Marquette" | mergedData$TEAM == "Vermont"] <- "East"
+mergedData$REGION[mergedData$TEAM == "Houston" | mergedData$TEAM == "Iowa" | mergedData$TEAM == "Auburn" | mergedData$TEAM == "Miami (FLA.)" |
+                    mergedData$TEAM == "Indiana" | mergedData$TEAM == "Iowa State" | mergedData$TEAM == "Pittsburgh" |
+                    mergedData$TEAM == "Xavier" | mergedData$TEAM == "Texas A&M" | mergedData$TEAM == "Penn State" | mergedData$TEAM == "Texas" |
+                    mergedData$TEAM == "Colgate"] <- "Midwest"
+mergedData$REGION[mergedData$TEAM == "Kansas" | mergedData$TEAM == "Howard" | mergedData$TEAM == "Arkansas" | mergedData$TEAM == "Illinois" |
+                    mergedData$TEAM == "St. Mary's (CA)" | mergedData$TEAM == "VCU" | mergedData$TEAM == "Connecticut" |
+                    mergedData$TEAM == "Iona" | mergedData$TEAM == "TCU" | mergedData$TEAM == "Arizona State" | mergedData$TEAM == "Gonzaga" |
+                    mergedData$TEAM == "Northwestern" | mergedData$TEAM == "Boise State" | mergedData$TEAM == "UCLA" | mergedData$TEAM == "NC-Asheville" | mergedData$TEAM == "Nevada"] <- "West"
+
 
 df_cortable<-mergedData%>%
   select(SEED, FREE.THROW.., OFFENSIVE.REBOUND.., DEFENSIVE.REBOUND.., X2PT.., X3PT.., WIN..)
@@ -98,6 +119,14 @@ table6 <- table6 %>%
 table6$Average <- rowSums(table6[,3:4])
 table6$Average <- table6$Average / 5
 
+table7 <- tournData23%>%
+  select(TEAM, SEED, OFFENSIVE.REBOUND.., DEFENSIVE.REBOUND.., X2PT.., WIN..)
+table7 <- table7 %>%
+  add_row(TEAM = 'Princeton', OFFENSIVE.REBOUND.. = 28.7, DEFENSIVE.REBOUND.. = 77.3, SEED = 15, X2PT.. = 53.6, WIN.. = 72.4)%>%
+  add_row(TEAM = 'Penn State', OFFENSIVE.REBOUND.. = 19.2, DEFENSIVE.REBOUND.. = 74.4, SEED = 10, X2PT.. = 53.1, WIN.. = 62.2)
+table7$Average <- rowSums(table7[,3:6])
+table7$Average <- table7$Average / 5
+
 
 upsetReasoning1 <- mergedData%>%
   dplyr::filter(TEAM == "Furman" | TEAM == "Virginia")
@@ -117,14 +146,14 @@ test<-table4[-samp,]
 
 #Building a model
 
-ggplot(table4,aes(NEUTRAL.WIN..,FREE.THROW..))+
+ggplot(mergedData,aes(SEED, WIN..,FREE.THROW..))+
   geom_point()
 
 models<-tibble(a1 = runif(250,-20,40),
                a2=runif(250,-5,5)
                )
 
-ggplot(table4,mapping=aes(x=NEUTRAL.WIN..,y=FREE.THROW..))+
+ggplot(mergedData,mapping=aes(x=WIN..,y=FREE.THROW..))+
          geom_abline(
            aes(intercept=a1, slope = a2),
            data= models, alpha = 1/4
@@ -134,20 +163,33 @@ ggplot(table4,mapping=aes(x=NEUTRAL.WIN..,y=FREE.THROW..))+
 model1 <-function(a,data){
   a[1]+data$x*a[2]
 }
-model1(c(7,1.5),table4)
+model1(c(7,1.5),mergedData)
 
 measure_distance<-function(mod,data){
   diff<-data$y- model1(mod,data)
   sqrt(mean(diff^2))
 }
-measure_distance(c(7,1.5),table4)
+measure_distance(c(7,1.5),mergedData)
 
-table4_dist<-function(a1,a2){
-  measure_distance(c(a1,a2),table4)
+mergedData_dist<-function(a1,a2){
+  measure_distance(c(a1,a2),mergedData)
 }
 models<-models%>%
-  mutate(dist = purr::map2_dbl(a1, a2,table4_dist ))
-       
+  mutate(dist = purrr::map2_dbl(a1, a2,mergedData_dist ))
+models      
+
+ggplot(mergedData,aes(x=WIN..,y=FREE.THROW..))+
+  geom_point(size = 2, color = "grey30")+
+  geom_abline(
+    aes(intercept = a1, slope = a2, color = -dist),
+    data = filter(models, rank(dist) <= 10)
+  )
+ggplot(models,aes(a1,a2))+
+  geom_point(
+    data = filter(models,rank(dist)<= 10),
+    size = 4, color = "red")+
+  geom_point(aes(colour= -dist))
+
 # Train the model
 model <- lm(SEED ~ DEFENSIVE.REBOUND.. + OFFENSIVE.REBOUND.., data = train)
 
@@ -160,6 +202,44 @@ rsquared <- R2(predictions,test$DEFENSIVE.REBOUND.. )
 #Decision tree
 Results <- rpart()
 rpart.plot(Results, type=3, fallen.leaves=F, cex=.5 )
+
+
+#shiny app
+
+
+
+ui<-fluidPage( 
+  
+  titlePanel(title = "March Madness 2023"),
+  
+  fluidRow(
+    column(2,
+           selectInput('X', 'Team 1',mergedData$TEAM)),
+    column(2,
+           selectInput('Y', 'Team 2',mergedData$TEAM)),
+           
+    
+    column(4,plotOutput('plot_01')),
+    column(6,DT::dataTableOutput("table_01", width = "100%"))
+  ),
+  
+  
+
+server<-function(input,output){
+  
+  output$plot_01 <- renderPlot({
+    ggplot(mergedData, aes_string(x=input$X, y=input$Y, colour=input$Splitby))+ geom_col(aes(colour = factor(color)))
+    
+    
+    
+    
+    
+  })
+  
+  output$table_01<-DT::renderDataTable(mergedData[,c(input$X,input$Y,input$Splitby)],options = list(pageLength = 4))
+}
+
+shinyApp(ui=ui, server=server)
 
 
 
