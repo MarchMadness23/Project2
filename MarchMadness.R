@@ -220,39 +220,38 @@ rpart.plot(Results, type=3, fallen.leaves=F, cex=.5 )
 #shiny app
 
 
+ui <- fluidPage(
+  titlePanel("March Madness Win Percentage"),
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("team1", "Select Team 1", choices = unique(mergedData$TEAM)),
+      selectInput("team2", "Select Team 2", choices = unique(mergedData$TEAM)),
+      
+    ),
+    mainPanel(
+      plotOutput("winplot")
+    )
+  )
+)
 
-ui<-fluidPage( 
-  
-  titlePanel(title = "March Madness 2023"),
-  
-  fluidRow(
-    column(2,
-           selectInput('X', 'Team 1',mergedData$TEAM)),
-    column(2,
-           selectInput('Y', 'Team 2',mergedData$TEAM)),
-           
-    
-    column(4,plotOutput('plot_01')),
-    column(6,DT::dataTableOutput("table_01", width = "100%"))
-  ),
-  
-  
-
-server<-function(input,output){
-  
-  output$plot_01 <- renderPlot({
-    ggplot(mergedData, aes_string(x=input$X, y=input$Y, colour=input$Splitby))+ geom_col(aes(colour = factor(color)))
-    
-    
-    
-    
-    
+server <- function(input, output) {
+  selected_teams <- reactive({
+    mergedData %>% 
+      filter(TEAM %in% c(input$team1, input$team2))
   })
-  
-  output$table_01<-DT::renderDataTable(mergedData[,c(input$X,input$Y,input$Splitby)],options = list(pageLength = 4))
+  output$winplot <- renderPlot({
+    ggplot(selected_teams(), aes(x = TEAM , y = Average, fill = TEAM)) + 
+      geom_bar(stat = "identity") +
+      labs(title = "Probability of winning ", x = "Team", y = "Calculated chances of winning ") +
+      theme_bw() +
+      theme(legend.position = "none")
+  })
 }
 
+
+
 shinyApp(ui=ui, server=server)
+
 
 
 
