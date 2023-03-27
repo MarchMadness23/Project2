@@ -104,10 +104,13 @@ corrplot(B, method="color")
 ```
 We used the code above to create a correaltion table. This was helpful in helping us narrow down teh variables we chose to work with.</br>
 We paid attention to how each variable correlated to seed number which was an indicator of the teams' performance this season.
+
 ![corrplot](https://user-images.githubusercontent.com/108307724/227842698-2b365839-8c86-4ae8-98d3-6c351640abd3.png)</br>
+
 The visual shows that free throw and  2 point percentage had relatively lower correlations to seed so we removed them from our clean table.
 
 We made a graph where the seed is on the x axis and the win percentage is on the y axis, to see which seed number has the highest probability to win.
+
 <img width="1440" alt="Screen Shot 2023-03-27 at 12 19 07 AM" src="https://user-images.githubusercontent.com/97116253/227847599-8e33f399-f1ba-4df3-9c26-ca4ed94b7b29.png">
 
 
