@@ -21,11 +21,11 @@ We used information of the Tournament Game data and the colums used to predict t
 
 # Data Cleaning🧹 
 To clean the data, we first removed the duplicates in the dataset of Tournament Game Data.
-```
+```R
 tournGameDataClean <- tournGameData[!duplicated(tournGameData), ]
 ```
 From the cleaned dataset, we made a table of the colums we were going to use to predict our winner.
-```
+```R
 table1 <- tournGameDataClean %>%
   select(YEAR,TEAM,SEED,TEAM.ROUND, FREE.THROW..,)
  ```
@@ -33,7 +33,7 @@ table1 <- tournGameDataClean %>%
 <img width="495" alt="Screen Shot 2023-03-25 at 10 36 23 PM" src="https://user-images.githubusercontent.com/97116253/227753893-23ec0be3-5bbe-468b-a590-674e3a0e8f65.png">
 
 Furthermore, we created another table only for the year 2023 to get the teams for this year. However there were missing teams in the dataset so we added the teams to get the accurate data of the teams playing for this year in the march madness. In addition, the seeds of certain teams were entered wrong so we corrected that. The last thing we needed to add was the region in which the teams were playing in. 
-```
+```R
 tournGameData23 <- table1%>%
   filter(YEAR == 2023)%>%
   select(TEAM,SEED)
@@ -92,7 +92,7 @@ The next game we compared was the Marquette versus Michigan State game.
 Here we can see that Michigan State has a higher offensive and defensive rebound percentage along with a higher three point and free throw shot percentage.  
 
 # Correlation-Hildana
-```
+```R
 variables <- df%>%
   select(Company, Product,Issue,State)
 
@@ -106,7 +106,7 @@ This new column summed up all those variables to create a new score for each tea
 
 # Shiny App - Mansi 
 For the shiny app, we made a model where we used the average column in the y axis and team name in the x axis to illustrate the winning probabily of two teams selected. 
-```
+```R
 ui <- fluidPage(
   titlePanel("March Madness Win Percentage"),
   sidebarLayout(
