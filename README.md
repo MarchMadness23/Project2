@@ -173,7 +173,7 @@ ggplot(mergedDataTop, aes(x =TEAM, y = Average, fill = TEAM)) +
   xlab("Team") +
   geom_text(aes(label = TEAM), vjust = 0.3,, size = 3)
 ```
-![Rplot02](https://user-images.githubusercontent.com/108307724/227851639-a7e681ba-3662-4269-9783-fee300a627f7.png)
+![Rplot04](https://user-images.githubusercontent.com/108307724/227852532-9330d70a-c950-4283-aa86-19700e91e3cd.png)
 ![regionplot](https://user-images.githubusercontent.com/108307724/227851930-f3b397a1-2a0f-4459-90ef-bc77c062b2c0.png)
 
 # Conclusion
