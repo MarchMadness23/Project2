@@ -5,7 +5,7 @@ For this project we analysed data on the performance of teams on March madness s
 
 ![19a42410dda651c98b107d53ef654d0d](https://user-images.githubusercontent.com/108307724/224206117-8971413f-8999-4c35-a383-d61730d24871.jpeg)
 
-# Dictionary📝
+# Dictionary📝- Mansi
 We used information of the Tournament Game data and the colums used to predict the winner were:
 1. TEAM - the team name 
 2. SEED - the rank of the team 
@@ -19,7 +19,7 @@ We used information of the Tournament Game data and the colums used to predict t
 
 
 
-# Data Cleaning🧹 
+# Data Cleaning🧹- Mansi
 To clean the data, we first removed the duplicates in the dataset of Tournament Game Data.
 ```R
 tournGameDataClean <- tournGameData[!duplicated(tournGameData), ]
