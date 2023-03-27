@@ -81,7 +81,7 @@ mergedData <- mergedData %>%
 
 
 
-# Looking at the winners- Leandra
+# Looking at the winners
 Since the first round and second round had already started taking place when we were finalizing our metrics, we looked at how the variables we were considering played a part in the first round upsets. The first one where we found a correlation in our variables and the upset was the Furman against Virgina game. 
 <img width="767" alt="Screen Shot 2023-03-26 at 11 14 42 PM" src="https://user-images.githubusercontent.com/113047041/227840293-49d8e5fc-03fa-4ec2-b31f-6f0395bf4e24.png">
 
@@ -91,7 +91,7 @@ The next game we compared was the Marquette versus Michigan State game.
 
 Here we can see that Michigan State has a higher offensive and defensive rebound percentage along with a higher three point and free throw shot percentage.  
 
-# Correlation-Hildana
+# Correlation
 ```R
 df_cortable<-mergedData%>%
   select(SEED, FREE.THROW.., OFFENSIVE.REBOUND.., DEFENSIVE.REBOUND.., X2PT.., X3PT.., WIN..)
@@ -150,8 +150,7 @@ shinyApp(ui=ui, server=server)
 ```
 
 # Conclusion
-Winner for each bracket
-Overall winner
+In conclusion, we looked at the performance of teams in this season. Using the winning tems from earlier in the tournament we looked at variable ssuchas 3 pt percenatge, 2 point percentage, win percentage, free throw rate among other variables that stood out. Using our correlation plot we naroowed it down to a shorter list of variables that correlate highly with seed number. using that we created a new metric that incorporated these variables and used it to compare teams against each other. 
 
 # Contributors
 Hildana Teklegiorgis</br>
