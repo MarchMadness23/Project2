@@ -154,20 +154,24 @@ upsetReasoning1 <- mergedData%>%
 upsetReasoning2 <- mergedData%>%
   dplyr::filter(TEAM == "Michigan State" | TEAM == "Marquette")
 
-#make this example reproducible
-set.seed(1)
+# Creating visual to see which region has the highest chance of winning
+ggplot(mergedData, aes(x =REGION, y = Average, fill = REGION)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Region with the highest chances of winning", x = "Region", y = "Calculated combined score") +
+  theme(legend.position = "none")
+# Creating visual to see which team within each region has the highest chance of winning
 
+mergedDataTop <- mergedData %>%
+  group_by(REGION) %>%
+  filter(Average == max(Average))
 
-#use 70% of dataset as training set and 30% as test set
-samp= sample(1:nrow(table7), size = round(0.7*nrow(table7)),replace=FALSE)
-train<-table7[samp,]
-test<-table7[-samp,]
-
-# Seed and win probabilty graph
-ggplot(mergedData, aes(x = SEED, y = WIN..)) +
-  geom_point() +
-  labs(x = "Seed", y = "Win", title = "Seed and win probability")
-
+ggplot(mergedDataTop, aes(x =TEAM, y = Average, fill = TEAM)) +
+  geom_bar(stat = "identity") +
+  theme(legend.position = "none") +
+  facet_wrap(~REGION, ncol = 2)+
+  labs(title = "Winner for each region", y = "Calculated score")+
+  xlab("Team") +
+  geom_text(aes(label = TEAM), vjust = 0.3,, size = 3)
 
 #shiny app
 
