@@ -32,7 +32,7 @@ table1 <- tournGameDataClean %>%
  
 <img width="495" alt="Screen Shot 2023-03-25 at 10 36 23 PM" src="https://user-images.githubusercontent.com/97116253/227753893-23ec0be3-5bbe-468b-a590-674e3a0e8f65.png">
 
-Furthermore, we created another table only for the year 2023 to get the teams for thsi year. However there were missing teams in the dataset so we added the teams to get the accurate data of the teams playing for this year in the march madness.
+Furthermore, we created another table only for the year 2023 to get the teams for this year. However there were missing teams in the dataset so we added the teams to get the accurate data of the teams playing for this year in the march madness.
 ```
 tournGameData23 <- table1%>%
   filter(YEAR == 2023)%>%
@@ -60,7 +60,40 @@ variables <- df%>%
 ```
 
 # Creating a new meteric- Leandra
-# Creating Interactive Shiny app
+
+# Shiny App - Mansi 
+For the shiny app, we made a model where we used the average column in the y axis and team name in the x axis to illustrate the winning probabily of two teams selected. 
+```
+ui <- fluidPage(
+  titlePanel("March Madness Win Percentage"),
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("team1", "Select Team 1", choices = unique(mergedData$TEAM)),
+      selectInput("team2", "Select Team 2", choices = unique(mergedData$TEAM)),
+      
+    ),
+    mainPanel(
+      plotOutput("winplot")
+    )
+  )
+)
+
+server <- function(input, output) {
+  selected_teams <- reactive({
+    mergedData %>% 
+      filter(TEAM %in% c(input$team1, input$team2))
+  })
+  output$winplot <- renderPlot({
+    ggplot(selected_teams(), aes(x = TEAM , y = Average, fill = TEAM)) + 
+      geom_bar(stat = "identity") +
+      labs(title = "Probability of winning ", x = "Team", y = "Calculated chances of winning ") +
+      theme_bw() +
+      theme(legend.position = "none")
+  })
+}
+
+shinyApp(ui=ui, server=server)
+```
 
 # Conclusion-
 Winner for each bracket
