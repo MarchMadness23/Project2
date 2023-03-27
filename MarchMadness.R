@@ -97,6 +97,21 @@ mergedData$REGION[mergedData$TEAM == "Kansas" | mergedData$TEAM == "Howard" | me
                     mergedData$TEAM == "St. Mary's (CA)" | mergedData$TEAM == "VCU" | mergedData$TEAM == "Connecticut" |
                     mergedData$TEAM == "Iona" | mergedData$TEAM == "TCU" | mergedData$TEAM == "Arizona State" | mergedData$TEAM == "Gonzaga" |
                     mergedData$TEAM == "Northwestern" | mergedData$TEAM == "Boise State" | mergedData$TEAM == "UCLA" | mergedData$TEAM == "NC-Asheville" | mergedData$TEAM == "Nevada"] <- "West"
+mergedData<-mergedData[complete.cases(mergedData), ]
+
+#adding the missing teams
+mergedData <- mergedData %>%
+  add_row(TEAM = 'Drake', OFFENSIVE.REBOUND.. = 23.8, DEFENSIVE.REBOUND.. = 77.6, SEED = 12, X2PT.. = 51.9, X3PT.. = 36.4, WIN.. = 76.5, FREE.THROW.. = 76.9, REGION = "Midwest")%>%
+  add_row(TEAM = 'Utah State', OFFENSIVE.REBOUND.. = 27.2, DEFENSIVE.REBOUND.. = 75.5, SEED = 10, X2PT.. = 54.6, X3PT.. = 37.9, WIN.. = 73.5, FREE.THROW.. = 76.6, REGION = "South")%>%
+  add_row(TEAM = 'Kent State', OFFENSIVE.REBOUND.. = 31.3, DEFENSIVE.REBOUND.. = 69.9, SEED = 13, X2PT.. = 51.4, X3PT.. = 33.2, WIN.. = 78.8, FREE.THROW.. = 72.3, REGION = "Midwest")%>%
+  add_row(TEAM = 'Louisiana', OFFENSIVE.REBOUND.. = 33.3, DEFENSIVE.REBOUND.. = 73.7, SEED = 13, X2PT.. = 51.9, X3PT.. = 36.5, WIN.. = 74.2, FREE.THROW.. = 67.1, REGION = "East")%>%
+  add_row(TEAM = 'UCSB', OFFENSIVE.REBOUND.. = 26.2, DEFENSIVE.REBOUND.. = 74.0, SEED = 14, X2PT.. = 54.8, X3PT.. = 34.8, WIN.. = 75.8, FREE.THROW.. = 73.6, REGION = "South")%>%
+  add_row(TEAM = 'Montana State', OFFENSIVE.REBOUND.. = 25.7, DEFENSIVE.REBOUND.. = 74.7, SEED = 14, X2PT.. = 52.6, X3PT.. = 31.8, WIN.. = 69.7, FREE.THROW.. = 75.8, REGION = "East")%>%
+  add_row(TEAM = 'GCU', OFFENSIVE.REBOUND.. = 30.2, DEFENSIVE.REBOUND.. = 69.5, SEED = 14, X2PT.. = 50.4, X3PT.. = 37.6, WIN.. = 63.6, FREE.THROW.. = 71.5, REGION = "West")%>%
+  add_row(TEAM = 'Kennesaw State', OFFENSIVE.REBOUND.. = 27.3, DEFENSIVE.REBOUND.. = 74.6, SEED = 14, X2PT.. = 51.2, X3PT.. = 36.8, WIN.. = 71.9, FREE.THROW.. = 66.2, REGION = "Midwest")%>%
+  add_row(TEAM = 'SE Missouri State', OFFENSIVE.REBOUND.. = 25.0, DEFENSIVE.REBOUND.. = 71.7, SEED = 16, X2PT.. = 50.3, X3PT.. = 33.2, WIN.. = 50.0, FREE.THROW.. = 71.1, REGION = "South")%>%
+  add_row(TEAM = 'Teaxas Southern', OFFENSIVE.REBOUND.. = 29.2, DEFENSIVE.REBOUND.. = 72.6, SEED = 16, X2PT.. = 47.7, X3PT.. = 28.0, WIN.. = 36.4, FREE.THROW.. = 66.3, REGION = "East")%>%
+  add_row(TEAM = 'Northern Kentucky', OFFENSIVE.REBOUND.. = 31.6, DEFENSIVE.REBOUND.. = 67.0, SEED = 16, X2PT.. = 47.4, X3PT.. = 34.3, WIN.. = 60.6, FREE.THROW.. = 70.8, REGION = "Midwest")
 
 
 #creating a correlation model
