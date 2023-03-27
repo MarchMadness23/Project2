@@ -5,7 +5,7 @@ For this project we analysed data on the performance of teams on March madness s
 
 ![19a42410dda651c98b107d53ef654d0d](https://user-images.githubusercontent.com/108307724/224206117-8971413f-8999-4c35-a383-d61730d24871.jpeg)
 
-# Dictionary📝
+# Dictionary📝- Mansi
 We used information of the Tournament Game data and the colums used to predict the winner were:
 1. TEAM - the team name 
 2. SEED - the rank of the team 
@@ -19,7 +19,7 @@ We used information of the Tournament Game data and the colums used to predict t
 
 
 
-# Data Cleaning🧹 
+# Data Cleaning🧹- Mansi
 To clean the data, we first removed the duplicates in the dataset of Tournament Game Data.
 ```R
 tournGameDataClean <- tournGameData[!duplicated(tournGameData), ]
@@ -93,10 +93,19 @@ Here we can see that Michigan State has a higher offensive and defensive rebound
 
 # Correlation-Hildana
 ```R
-variables <- df%>%
-  select(Company, Product,Issue,State)
+df_cortable<-mergedData%>%
+  select(SEED, FREE.THROW.., OFFENSIVE.REBOUND.., DEFENSIVE.REBOUND.., X2PT.., X3PT.., WIN..)
+head(df_cortable)
+B<-cor(df_cortable)
+head(round(B,2))
+corrplot(B, method="color")
+
 
 ```
+We used the code above to create a correaltion table. This was helpful in helping us narrow down teh variables we chose to work with.</br>
+We paid attention to how each variable correlated to seed number which was an indicator of the teams' performance this season.
+![corrplot](https://user-images.githubusercontent.com/108307724/227842698-2b365839-8c86-4ae8-98d3-6c351640abd3.png)
+The visual show that free throw and  2 point percentage had relatively lower correlations to seed so we removed them from our clean table.
 
 # Creating a new meteric- Leandra
 While trying to figure out which variable correctly predicted the most games from the first two rounds, we realized there was not one single stat that made the difference in the win or loss so we decided to combine all the variables to created a new column. 
