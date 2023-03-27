@@ -5,35 +5,27 @@ library(rpart)
 library(rpart.plot)
 library(modelr)
 library(tidyverse)
-library(na.action =na.warn)
 library(ggplot2)
 library(corrplot)
 library(purrr)
 library(shiny)
 library(DT)
 library(rsconnect)
+library(tidyverse)
 
 rm(list=ls())
 
 
-#Leandra's working directory
-setwd("~/git_data/marchMadness23")
-#Hildana's directory
-setwd("~/Desktop/DATA-332/Project2")
-#Mansi's directory
-setwd("~/Desktop/DATA-331/Project2")
-
-
 #Mar 15
 
-tournGameData <- read.csv('Tournament Game Data.csv')
+tournGameData <- read.csv('data/Tournament Game Data.csv')
 tournGameDataClean <- tournGameData[!duplicated(tournGameData), ]
-tournData23 <- read.csv('2023 Tournament Data.csv')
-trendData <- read.csv('Tournament Trends.csv')
-saveRDS(trendData,'Tournament Game Data.rds')
+tournData23 <- read.csv('data/2023 Tournament Data.csv')
+trendData <- read.csv('data/Tournament Trends.csv')
+saveRDS(trendData,'data/Tournament Game Data.rds')
 #clean data
 table1 <- tournGameDataClean %>%
-  select(YEAR,TEAM,SEED,TEAM.ROUND, FREE.THROW..,)
+  select(YEAR,TEAM,SEED,TEAM.ROUND, FREE.THROW..)
 tournGameData23 <- table1%>%
   filter(YEAR == 2023)%>%
   select(TEAM,SEED)
@@ -74,7 +66,7 @@ mergedData <- mergedData %>%
   add_row(TEAM = 'Princeton', OFFENSIVE.REBOUND.. = 28.7, DEFENSIVE.REBOUND.. = 77.3, SEED = 15, X2PT.. = 53.6, X3PT.. = 33.4, WIN.. = 72.4, FREE.THROW.. = 71.5)%>%
   add_row(TEAM = 'Penn State', OFFENSIVE.REBOUND.. = 19.2, DEFENSIVE.REBOUND.. = 74.4, SEED = 10, X2PT.. = 53.1, X3PT.. = 38.7, WIN.. = 62.2, FREE.THROW.. = 73.9)
 
-#mergedData <- cbind(mergedData, "AVERAGE")
+
 #mergedData$`"AVERAGE"` <- rowMeans(mergedData$FREE.THROW.., mergedData$OFFENSIVE.REBOUND.., mergedData$DEFENSIVE.REBOUND.., mergedData$X2PT.., mergedData$X3PT..)
 mergedData$Average <- rowSums(mergedData[,3:8])
 #mergedData$Average <- mergedData$Average / 5
@@ -89,25 +81,12 @@ mergedData$REGION[mergedData$TEAM == "Purdue" | mergedData$TEAM == "Fairleigh Di
 mergedData$REGION[mergedData$TEAM == "Houston" | mergedData$TEAM == "Iowa" | mergedData$TEAM == "Auburn" | mergedData$TEAM == "Miami (FLA.)" |
                     mergedData$TEAM == "Indiana" | mergedData$TEAM == "Iowa State" | mergedData$TEAM == "Pittsburgh" |
                     mergedData$TEAM == "Xavier" | mergedData$TEAM == "Texas A&M" | mergedData$TEAM == "Penn State" | mergedData$TEAM == "Texas" |
-                    mergedData$TEAM == "Colgate" | mergedData$TEAM == "Mississippi State"] <- "Midwest"
+                    mergedData$TEAM == "Colgate"] <- "Midwest"
 mergedData$REGION[mergedData$TEAM == "Kansas" | mergedData$TEAM == "Howard" | mergedData$TEAM == "Arkansas" | mergedData$TEAM == "Illinois" |
                     mergedData$TEAM == "St. Mary's (CA)" | mergedData$TEAM == "VCU" | mergedData$TEAM == "Connecticut" |
                     mergedData$TEAM == "Iona" | mergedData$TEAM == "TCU" | mergedData$TEAM == "Arizona State" | mergedData$TEAM == "Gonzaga" |
                     mergedData$TEAM == "Northwestern" | mergedData$TEAM == "Boise State" | mergedData$TEAM == "UCLA" | mergedData$TEAM == "NC-Asheville" | mergedData$TEAM == "Nevada"] <- "West"
-mergedData<-mergedData[complete.cases(mergedData), ]
-mergedData <- mergedData %>%
-  add_row(TEAM = 'Drake', OFFENSIVE.REBOUND.. = 23.8, DEFENSIVE.REBOUND.. = 77.6, SEED = 12, X2PT.. = 51.9, X3PT.. = 36.4, WIN.. = 76.5, FREE.THROW.. = 76.9, REGION = "Midwest")%>%
-  add_row(TEAM = 'Utah State', OFFENSIVE.REBOUND.. = 27.2, DEFENSIVE.REBOUND.. = 75.5, SEED = 10, X2PT.. = 54.6, X3PT.. = 37.9, WIN.. = 73.5, FREE.THROW.. = 76.6, REGION = "South")%>%
-  add_row(TEAM = 'Kent State', OFFENSIVE.REBOUND.. = 31.3, DEFENSIVE.REBOUND.. = 69.9, SEED = 13, X2PT.. = 51.4, X3PT.. = 33.2, WIN.. = 78.8, FREE.THROW.. = 72.3, REGION = "Midwest")%>%
-  add_row(TEAM = 'Louisiana', OFFENSIVE.REBOUND.. = 33.3, DEFENSIVE.REBOUND.. = 73.7, SEED = 13, X2PT.. = 51.9, X3PT.. = 36.5, WIN.. = 74.2, FREE.THROW.. = 67.1, REGION = "East")%>%
-  add_row(TEAM = 'UCSB', OFFENSIVE.REBOUND.. = 26.2, DEFENSIVE.REBOUND.. = 74.0, SEED = 14, X2PT.. = 54.8, X3PT.. = 34.8, WIN.. = 75.8, FREE.THROW.. = 73.6, REGION = "South")%>%
-  add_row(TEAM = 'Montana State', OFFENSIVE.REBOUND.. = 25.7, DEFENSIVE.REBOUND.. = 74.7, SEED = 14, X2PT.. = 52.6, X3PT.. = 31.8, WIN.. = 69.7, FREE.THROW.. = 75.8, REGION = "East")%>%
-  add_row(TEAM = 'GCU', OFFENSIVE.REBOUND.. = 30.2, DEFENSIVE.REBOUND.. = 69.5, SEED = 14, X2PT.. = 50.4, X3PT.. = 37.6, WIN.. = 63.6, FREE.THROW.. = 71.5, REGION = "West")%>%
-  add_row(TEAM = 'Kennesaw State', OFFENSIVE.REBOUND.. = 27.3, DEFENSIVE.REBOUND.. = 74.6, SEED = 14, X2PT.. = 51.2, X3PT.. = 36.8, WIN.. = 71.9, FREE.THROW.. = 66.2, REGION = "Midwest")%>%
-  add_row(TEAM = 'SE Missouri State', OFFENSIVE.REBOUND.. = 25.0, DEFENSIVE.REBOUND.. = 71.7, SEED = 16, X2PT.. = 50.3, X3PT.. = 33.2, WIN.. = 50.0, FREE.THROW.. = 71.1, REGION = "South")%>%
-  add_row(TEAM = 'Teaxas Southern', OFFENSIVE.REBOUND.. = 29.2, DEFENSIVE.REBOUND.. = 72.6, SEED = 16, X2PT.. = 47.7, X3PT.. = 28.0, WIN.. = 36.4, FREE.THROW.. = 66.3, REGION = "East")%>%
-  add_row(TEAM = 'Northern Kentucky', OFFENSIVE.REBOUND.. = 31.6, DEFENSIVE.REBOUND.. = 67.0, SEED = 16, X2PT.. = 47.4, X3PT.. = 34.3, WIN.. = 60.6, FREE.THROW.. = 70.8, REGION = "Midwest")
-  
+
 
 df_cortable<-mergedData%>%
   select(SEED, FREE.THROW.., OFFENSIVE.REBOUND.., DEFENSIVE.REBOUND.., X2PT.., X3PT.., WIN..)
@@ -125,7 +104,7 @@ table5$Average <- rowSums(table5[,3:6])
 table5$Average <- table5$Average / 5
 
 table6 <- tournData23%>%
-  select(TEAM, SEED, OFFENSIVE.REBOUND..,, X3PT..)
+  select(TEAM, SEED, OFFENSIVE.REBOUND.., X3PT..)
 table6 <- table6 %>%
   add_row(TEAM = 'Princeton', OFFENSIVE.REBOUND.. = 28.7, SEED = 15, X3PT.. = 33.4)%>%
   add_row(TEAM = 'Penn State', OFFENSIVE.REBOUND.. = 19.2, SEED = 10, X3PT.. = 38.7)
@@ -151,96 +130,37 @@ upsetReasoning2 <- mergedData%>%
 set.seed(1)
 
 
-#use 70% of dataset as training set and 30% as test set 
-samp= sample(1:nrow(table4), size = round(0.7*nrow(table4)),replace=FALSE)
-train<-table4[samp,]
-test<-table4[-samp,]
+#use 70% of dataset as training set and 30% as test set
+samp= sample(1:nrow(table7), size = round(0.7*nrow(table7)),replace=FALSE)
+train<-table7[samp,]
+test<-table7[-samp,]
 
 
-#Building a model
-
-ggplot(mergedData,aes(SEED, WIN..,FREE.THROW..))+
-  geom_point()
-
-models<-tibble(a1 = runif(250,-20,40),
-               a2=runif(250,-5,5)
-               )
-
-ggplot(mergedData,mapping=aes(x=WIN..,y=FREE.THROW..))+
-         geom_abline(
-           aes(intercept=a1, slope = a2),
-           data= models, alpha = 1/4
-         )+
-         geom_point()
-       
-model1 <-function(a,data){
-  a[1]+data$x*a[2]
-}
-model1(c(7,1.5),mergedData)
-
-measure_distance<-function(mod,data){
-  diff<-data$y- model1(mod,data)
-  sqrt(mean(diff^2))
-}
-measure_distance(c(7,1.5),mergedData)
-
-mergedData_dist<-function(a1,a2){
-  measure_distance(c(a1,a2),mergedData)
-}
-models<-models%>%
-  mutate(dist = purrr::map2_dbl(a1, a2,mergedData_dist ))
-models      
-
-ggplot(mergedData,aes(x=WIN..,y=FREE.THROW..))+
-  geom_point(size = 2, color = "grey30")+
-  geom_abline(
-    aes(intercept = a1, slope = a2, color = -dist),
-    data = filter(models, rank(dist) <= 10)
-  )
-ggplot(models,aes(a1,a2))+
-  geom_point(
-    data = filter(models,rank(dist)<= 10),
-    size = 4, color = "red")+
-  geom_point(aes(colour= -dist))
-
-# Train the model
-model <- lm(SEED ~ DEFENSIVE.REBOUND.. + OFFENSIVE.REBOUND.., data = train)
-
-# Evaluate the model # linear regression 
-predictions <- predict(model, newdata = test)
-rmse <- RMSE(predictions, test$DEFENSIVE.REBOUND..)
-rsquared <- R2(predictions,test$DEFENSIVE.REBOUND.. )
-
-
-#Decision tree
-Results <- rpart()
-rpart.plot(Results, type=3, fallen.leaves=F, cex=.5 )
 
 
 #shiny app
 
-
 ui <- fluidPage(
   titlePanel("March Madness Win Percentage"),
+  sidebarPanel(
   sidebarLayout(
-    sidebarPanel(
       selectInput("team1", "Select Team 1", choices = unique(mergedData$TEAM)),
       selectInput("team2", "Select Team 2", choices = unique(mergedData$TEAM)),
       
-    ),
+    )),
     mainPanel(
       plotOutput("winplot")
     )
-  )
+  
 )
 
 server <- function(input, output) {
   selected_teams <- reactive({
-    mergedData %>% 
+    mergedData %>%
       filter(TEAM %in% c(input$team1, input$team2))
   })
   output$winplot <- renderPlot({
-    ggplot(selected_teams(), aes(x = TEAM , y = Average, fill = TEAM)) + 
+    ggplot(selected_teams(), aes(x = TEAM , y = Average, fill = TEAM)) +
       geom_bar(stat = "identity") +
       labs(title = "Probability of winning ", x = "Team", y = "Calculated chances of winning ") +
       theme_bw() +
@@ -249,23 +169,6 @@ server <- function(input, output) {
 }
 
 
-
 shinyApp(ui=ui, server=server)
 
-
-
-
-
-
-#stuff he wrote in class to call functions
-df<-mtcars
-
-region1 <- runCalc(df,23)
-region2 <- runCalc(df,25)
-
-runCalc <- function(df,x){
-  df<- df %>%
-    filter(mpg >x)
-  return(df)
-}
 
