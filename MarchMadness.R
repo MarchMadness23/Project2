@@ -156,14 +156,14 @@ test<-table7[-samp,]
 ui <- fluidPage(
   titlePanel("March Madness Win Percentage"),
   sidebarPanel(
-  sidebarLayout(
+    sidebarLayout(
       selectInput("team1", "Select Team 1", choices = unique(mergedData$TEAM)),
       selectInput("team2", "Select Team 2", choices = unique(mergedData$TEAM)),
       
     )),
-    mainPanel(
-      plotOutput("winplot")
-    )
+  mainPanel(
+    plotOutput("winplot")
+  )
   
 )
 
