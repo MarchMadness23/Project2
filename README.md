@@ -152,6 +152,29 @@ server <- function(input, output) {
 
 shinyApp(ui=ui, server=server)
 ```
+# Visuals using our calculated metric
+```R
+# Creating visual to see which region has the highest chance of winning
+ggplot(mergedData, aes(x =REGION, y = Average, fill = REGION)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Region with the highest chances of winning", x = "Region", y = "Calculated combined score") +
+  theme(legend.position = "none")
+# Creating visual to see which team within each region has the highest chance of winning
+
+mergedDataTop <- mergedData %>%
+  group_by(REGION) %>%
+  filter(Average == max(Average))
+
+ggplot(mergedDataTop, aes(x =TEAM, y = Average, fill = TEAM)) +
+  geom_bar(stat = "identity") +
+  theme(legend.position = "none") +
+  facet_wrap(~REGION, ncol = 2)+
+  labs(title = "Winner for each region", y = "Calculated score")+
+  xlab("Team") +
+  geom_text(aes(label = TEAM), vjust = 0.3,, size = 3)
+```
+![Rplot02](https://user-images.githubusercontent.com/108307724/227851639-a7e681ba-3662-4269-9783-fee300a627f7.png)
+![regionplot](https://user-images.githubusercontent.com/108307724/227851930-f3b397a1-2a0f-4459-90ef-bc77c062b2c0.png)
 
 # Conclusion
 In conclusion, we looked at the performance of teams in this season. Using the winning tems from earlier in the tournament we looked at variable ssuchas 3 pt percenatge, 2 point percentage, win percentage, free throw rate among other variables that stood out. Using our correlation plot we naroowed it down to a shorter list of variables that correlate highly with seed number. using that we created a new metric that incorporated these variables and used it to compare teams against each other. 
