@@ -108,7 +108,8 @@ We paid attention to how each variable correlated to seed number which was an in
 The visual shows that free throw and  2 point percentage had relatively lower correlations to seed so we removed them from our clean table.
 
 We made a graph where the seed is on the x axis and the win percentage is on the y axis, to see which seed number has the highest probability to win.
-<img width="495" alt="Screen Shot 2023-03-25 at 10 36 23 PM" src="https://user-images.githubusercontent.com/97116253/227847484-1cd6cfe7-7d34-4644-a561-437bc867cb62.png">
+<img width="1440" alt="Screen Shot 2023-03-27 at 12 19 07 AM" src="https://user-images.githubusercontent.com/97116253/227847599-8e33f399-f1ba-4df3-9c26-ca4ed94b7b29.png">
+
 
 # Creating a new meteric
 While trying to figure out which variable correctly predicted the most games from the first two rounds, we realized there was not one single stat that made the difference in the win or loss so we decided to combine all the variables to created a new column. 
