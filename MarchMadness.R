@@ -163,7 +163,10 @@ samp= sample(1:nrow(table7), size = round(0.7*nrow(table7)),replace=FALSE)
 train<-table7[samp,]
 test<-table7[-samp,]
 
-
+# Seed and win probabilty graph
+ggplot(mergedData, aes(x = SEED, y = WIN..)) +
+  geom_point() +
+  labs(x = "Seed", y = "Win", title = "Seed and win probability")
 
 
 #shiny app
